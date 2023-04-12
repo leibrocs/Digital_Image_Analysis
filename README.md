@@ -43,5 +43,33 @@ After pre-processing, the master and the slave image were co-registered with the
 4. Holes caused by outliers were filled. The offset at a missing point was replaced by a new offset computed by local weighted average.
 5. The velocities for all points on the GCP grid from their offsets were computed.
 6. Computation of the velocities for all pixels in the master image from the velocities on the GCP grid by interpolation.
+
 During those steps several parameters needed to be set. Some of them, like the maximum velocity or the registration window dimensions differ heavily between glaciers and are chosen based on literature data (Table 2).
+
+***Table 2** Processing parameters for offset tracking. The GCP grid spacing determines the resolution of our velocity product. The size of the registration window depends on the maximum velocity of the glacier and the period between data acquisitions. The images were twelve days apart and the maximum speed of Petermann glacier is close to 5 m day-1. This means that the glacier surface will shift by maximum 60 meters and the default settings of 128 pixels are suitable.* 
+|                 | Processing Parameters          |                       |
+| --------------- | ------------------------------ | --------------------- |
+| Output Grid     | Grid Azimuth Spacing (pixels)  | 60                    |
+|                 | Grid Range Spacing (pixels)    | 60                    |
+| Registration    | Window Width x Height (pixels) | 128 x 128             |
+|                 | Cross-Correlation Threshold    | 0.1                   |
+|                 | Max Velocity (m/ day)          | 5.0                   |
+| Resampling Type |                                | Bicubic Interpolation |
+
+Lastly, Range Doppler terrain correction was used to compensate for distortions due to the tilt of the satellite sensor, topographical variations of the scene, and to reproject the scene to geographic projection (Figure 4). 
+
+| ![OffsetTracking_Results](https://user-images.githubusercontent.com/116877154/231562055-50ca997b-a0e2-4fa8-8bbb-a8e3df2a7af7.png) |
+|:--:|
+| ***Figure 4** Terrain corrected offset tracking results. The calculated velocity of the glacier was layered on top of pre-processed SAR images for (a) January and (b) July.* |
+
+### 2.5 Visualization - QGIS
+The last step was to visualize the offset tracking results. Therefore, the results were transferred from SNAP to QGIS. For visualization the two pre-processed slave scenes as background images and the two velocity layers were added. Subsequently, the derived velocity values stored in a .csv-file were exported to QGIS as a delimited text layer and saved as an ESRI shapefile. The newly created velocity shapefile contained coordinates of the GCP points in the master image, coordinates of the corresponding point in the slave image, distance travelled, velocity [m day-1], heading in degrees (East from North), range shift, and azimuth shift. In the following, a subset only containing a fraction (70 %) of the velocity points was created using the expression widow. This step was necessary because otherwise the point grid would have been too dense to be able to visualize velocity vector fields. For this purpose, the “Vector field render” plugin was used. In the dialog window the vector field type polar (length, angle) field was set as well as velocity as length attribute and heading as angle attribute. In the print layout four maps were added. The first two maps depicted the ice flow direction in form of the velocity vector fields and the two other maps visualized the velocity of the glacier. Maps of the same study period were horizontally aligned and maps of the same kind vertically to allow for visual comparison. For all maps a pre-processed SAR slave image for the respective month was used as background. Additionally, text fields containing the study periods and a legend were added (Figure 5).
+| ![PetermannVelocity_final](https://user-images.githubusercontent.com/116877154/231562647-a53d57a5-2b09-430f-ab44-f8b9c492bd02.png) |
+|:--:|
+| ***Figure 5** Petermann Glacier ice flux direction represented by arrows scaled with the magnitude of the velocity for January (a) and July (b). Surface velocities obtained by SAR offset tracking for January (c) and July (d). Slow acceleration on the Greenland ice sheet and rapid increase in speed along the fjord and on the ice tongue.* |
+
+## 3. Results
+The movement data of Petermann Glacier obtained by using SAR offset tracking procedure suggest that the glacier moves from its terminus in the Southeast along its fjord towards the Hall Basin in the Northwest. The velocity of the glacier follows this pattern and increases progressively downstream along its profile. Petermann gradually accelerates on the ice sheet from slow to moderate speed and experiences a rapid increase in velocity as it narrows and enters the fjord towards its front. The floating ice shelf exhibits the highest velocities which stay constant towards the front end. Additionally, a gradual deceleration towards both sides can be observed. 
+Apart from the movement of the glacier itself, the velocity map of July depicts several outliers located on the Greenland ice sheet as well as a large amount of missing data, which limits the interpretability of the results. The comparison of the two velocity distribution diagrams reveals significant changes in the displacement rate from winter to summer. In winter the mean velocity was estimated to be around 1.507 m day-1 and during melting season in summer 2.096 m day -1. The maximum speed was found to be 3.564 and 4.198 m day-1 for January and July respectively.  
+
 
